@@ -1,5 +1,5 @@
 #! /bin/sh
 
 aclocal
-automake --foreign --add-missing
+automake --gnu --add-missing --foreign
 autoconf

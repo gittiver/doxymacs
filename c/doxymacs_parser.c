@@ -70,7 +70,7 @@ typedef struct _hash_entry
 
 hash_entry *symbol_hash[HASH_SIZE];
 
-inline static unsigned int hash(const char *s)
+inline unsigned int hash(const char *s)
 {
     unsigned int h = 0;
 
@@ -79,10 +79,10 @@ inline static unsigned int hash(const char *s)
         h += *s++;
     }
 
-    return h % HASH_SIZE;
+    return abs(h % HASH_SIZE);
 }
 
-inline static void AddToHash(completion_list *cl)
+inline void AddToHash(completion_list *cl)
 {
     unsigned int h = hash(cl->symbol);
     hash_entry **cur = &symbol_hash[h];
@@ -96,7 +96,7 @@ inline static void AddToHash(completion_list *cl)
 }
 
 /* mmmmm... free hash */
-inline static void FreeHash(void)
+static void FreeHash(void)
 {
     unsigned int i;
     for (i = 0; i < HASH_SIZE; i++)
@@ -117,7 +117,7 @@ inline static void FreeHash(void)
 
 /* XML Helper Functions */
 
-inline static char *XMLTagChild(xmlNodePtr node, const char *name)
+inline char *XMLTagChild(xmlNodePtr node, const char *name)
 {
     xmlNodePtr cur = node->xmlChildrenNode;
 
@@ -141,7 +141,7 @@ inline static char *XMLTagChild(xmlNodePtr node, const char *name)
     return NULL;
 }
 
-inline static char *XMLTagAttr(xmlNodePtr node, const char *attr)
+inline char *XMLTagAttr(xmlNodePtr node, const char *attr)
 {
     xmlAttrPtr props = node->properties;
 
@@ -167,7 +167,7 @@ inline static char *XMLTagAttr(xmlNodePtr node, const char *attr)
 
 /* Look up functions for symbols and descriptions */
 
-inline static completion_list *LookUpSymbol(const char *symbol)
+inline completion_list *LookUpSymbol(const char *symbol)
 {
     unsigned int h = hash(symbol);
     hash_entry *cur = symbol_hash[h];
@@ -187,7 +187,7 @@ inline static completion_list *LookUpSymbol(const char *symbol)
     return NULL;
 }
 
-inline static desc_url_list *LookUpDesc(completion_list *entry, const char *desc)
+inline desc_url_list *LookUpDesc(completion_list *entry, const char *desc)
 {
     desc_url_list *cur = entry->descs;
 
@@ -206,8 +206,8 @@ inline static desc_url_list *LookUpDesc(completion_list *entry, const char *desc
 
 /* Add the given name, description and url to our completion list */
 
-inline static int AddToCompletionList(const char *name,
-                                      const char *desc, const char *url)
+inline int AddToCompletionList(const char *name,
+                               const char *desc, const char *url)
 {
     completion_list *check;
 
@@ -429,8 +429,8 @@ static void FreeCompletionList(void)
 
 /* Add the members of a compound to the completion list */
 
-inline static int AddCompoundMembers(xmlNodePtr compound,
-                                     const char *name, const char *url)
+inline int AddCompoundMembers(xmlNodePtr compound,
+                              const char *name, const char *url)
 {
     xmlNodePtr child = compound->xmlChildrenNode;
     int ret = 0;

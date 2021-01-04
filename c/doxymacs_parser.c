@@ -79,7 +79,7 @@ inline unsigned int hash(const char *s)
         h += *s++;
     }
 
-    return abs(h % HASH_SIZE);
+    return h % HASH_SIZE;
 }
 
 inline void AddToHash(completion_list *cl)
@@ -206,7 +206,7 @@ inline desc_url_list *LookUpDesc(completion_list *entry, const char *desc)
 
 /* Add the given name, description and url to our completion list */
 
-inline int AddToCompletionList(const char *name,
+static int AddToCompletionList(const char *name,
                                const char *desc, const char *url)
 {
     completion_list *check;
@@ -429,7 +429,7 @@ static void FreeCompletionList(void)
 
 /* Add the members of a compound to the completion list */
 
-inline int AddCompoundMembers(xmlNodePtr compound,
+static int AddCompoundMembers(xmlNodePtr compound,
                               const char *name, const char *url)
 {
     xmlNodePtr child = compound->xmlChildrenNode;
